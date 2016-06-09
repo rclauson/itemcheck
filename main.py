@@ -24,9 +24,23 @@ my_environment = jinja2.Environment(
     autoescape=True)
 
 class ItemHandler(webapp2.RequestHandler):
+
     def get(self):
         item_template=my_environment.get_template('templates/check.html')
         self.response.write(item_template.render())
+
+    def post(self):
+        def checkItem(item):
+            item_list =["Apple","Airheads","Boiled Egg"]
+            if item in item_list:
+                message = "In Stock"
+            else:
+                message = "Not in Stock"
+            return message
+        instock_results = checkItem(self.request.get("item_name"))
+        message_variables = {"in_stock_or_not":instock_results}
+        results_template=my_environment.get_template('templates/results.html')
+        self.response.write(results_template.render(message_variables))
 
 class CheckHandler(webapp2.RequestHandler):
     def get(self):
